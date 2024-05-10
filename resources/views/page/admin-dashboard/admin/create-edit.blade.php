@@ -12,6 +12,8 @@
                 value="{{ '' }}" />
             <x-form.input oninput="this.value = this.value.replace(/^[._]+|[._]+$|[^0-9_.]/g, '');" name="phone" label="Phone" placeholder="input phone"
                 value="{{ $user->phone ?? '' }}" />
+            <x-form.input oninput="this.value = this.value.replace(/[^a-zA-Z0-9@_.]/g, '');" name="email" label="Email" placeholder="input email"
+                value="{{ $user->email ?? '' }}" />
             <x-form.input oninput="this.value = this.value.replace(/^[._]+|[._]+$|[^A-Za-z0-9_.]/g, '')" name="username" label="Username" placeholder="input your nim"
                 value="{{ $user->username ?? '' }}" />
             <x-button.submit />

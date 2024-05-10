@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\LoginRegisterController;
 use App\Http\Controllers\ProfileController;
@@ -31,6 +32,7 @@ Route::middleware(['no_auth'])->group(function () {
 
     Route::prefix('admin')->as('admin.')->middleware(['role:admin', 'auth'])->group(function () {
         Route::get('dashboard', [AdminHomeController::class, 'index'])->name('dashboard');
+        Route::resource('admin', AdminController::class)->parameter('admin', 'user');
     });
 
     Route::get('logout', [LoginRegisterController::class, 'logout'])->name('logout');

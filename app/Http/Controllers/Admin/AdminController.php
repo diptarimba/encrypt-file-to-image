@@ -54,13 +54,12 @@ class AdminController extends Controller
             'name' => 'required',
             'username' => 'required',
             'password' => 'required',
+            'email' => 'required',
             'phone' => 'required'
         ]);
 
         $user = User::create(array_merge($request->all(), [
             'password' => bcrypt($request->password),
-            'dob' => Carbon::now()->subYears(20)->format('Y-m-d'),
-            'school' => 'Admin',
             'picture' => asset('assets-dashboard/images/placeholder.png')
         ]));
         $user->assignRole('admin');
@@ -112,8 +111,8 @@ class AdminController extends Controller
     public function destroy(User $user)
     {
         try {
-            if(User::role('admin')->count() <= 1){
-                return redirect()->route('admin.admin.index')->with('error', 'Last Admin cannot be deleted');
+            if($user->id == auth()->user()->id) {
+                throw new \Exception('You cannot delete yourself');
             }
             $user->delete();
             return redirect()->route('admin.admin.index')->with('success', 'Admin Deleted Successfully');

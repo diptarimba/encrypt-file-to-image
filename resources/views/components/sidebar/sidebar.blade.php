@@ -9,6 +9,8 @@
                 <x-sidebar.divider title="Menu" />
                 <x-sidebar.first-single title="Dashboard" key="dashboard" icon="home"
                     url="{{ route('admin.dashboard') }}" />
+                <x-sidebar.first-single title="Admin" key="admin" icon="key"
+                    url="{{ route('admin.admin.index') }}" />
             </ul>
         </div>
         <!-- Sidebar -->
