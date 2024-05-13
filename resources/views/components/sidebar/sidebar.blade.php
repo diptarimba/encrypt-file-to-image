@@ -11,6 +11,10 @@
                     url="{{ route('admin.dashboard') }}" />
                 <x-sidebar.first-single title="Admin" key="admin" icon="key"
                     url="{{ route('admin.admin.index') }}" />
+                <x-sidebar.first-single title="Encrypt" key="admin" icon="command"
+                    url="{{ route('admin.encrypt.index') }}" />
+                <x-sidebar.first-single title="Decrypt" key="admin" icon="crosshair"
+                    url="{{ route('admin.decrypt.index') }}" />
             </ul>
         </div>
         <!-- Sidebar -->
