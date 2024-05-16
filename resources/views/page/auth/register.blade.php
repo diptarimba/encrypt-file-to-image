@@ -56,26 +56,16 @@
                                             id="name" name="name" required placeholder="Enter Name">
                                     </div>
                                     <div class="mb-4">
-                                        <label class="text-gray-600 font-medium mb-2 block dark:text-gray-100">Nomor
-                                            Hp</label>
-                                        <input type="text"
+                                        <label class="text-gray-600 font-medium mb-2 block dark:text-gray-100">Email</label>
+                                        <input oninput="this.value = this.value.replace(/[^a-zA-Z0-9@_.]/g, '');" type="email"
                                             class="w-full border-gray-100 rounded placeholder:text-sm py-2 dark:bg-zinc-700/50 dark:border-zinc-600 dark:text-gray-100 dark:placeholder:text-zinc-100/60"
-                                            id="phone" name="phone" required placeholder="Enter Phone Number"
-                                            pattern="[0-9]*" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
+                                            id="dob" name="email" required placeholder="Enter Email">
                                     </div>
                                     <div class="mb-4">
-                                        <label class="text-gray-600 font-medium mb-2 block dark:text-gray-100">Tanggal
-                                            lahir</label>
-                                        <input type="date"
+                                        <label class="text-gray-600 font-medium mb-2 block dark:text-gray-100">Phone</label>
+                                        <input oninput="this.value = this.value.replace(/^[._]+|[._]+$|[^0-9_.]/g, '');" type="text"
                                             class="w-full border-gray-100 rounded placeholder:text-sm py-2 dark:bg-zinc-700/50 dark:border-zinc-600 dark:text-gray-100 dark:placeholder:text-zinc-100/60"
-                                            id="dob" name="dob" required placeholder="Enter Date Of Birth">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label class="text-gray-600 font-medium mb-2 block dark:text-gray-100">Asal
-                                            Sekolah</label>
-                                        <input type="text"
-                                            class="w-full border-gray-100 rounded placeholder:text-sm py-2 dark:bg-zinc-700/50 dark:border-zinc-600 dark:text-gray-100 dark:placeholder:text-zinc-100/60"
-                                            id="school" name="school" requried placeholder="Enter username">
+                                            id="school" name="phone" requried placeholder="Enter Phone">
                                     </div>
                                     <div class="mb-4">
                                         <label
@@ -83,7 +73,7 @@
                                         <input type="text"
                                             class="w-full border-gray-100 rounded placeholder:text-sm py-2 dark:bg-zinc-700/50 dark:border-zinc-600 dark:text-gray-100 dark:placeholder:text-zinc-100/60"
                                             id="username" name="username" required
-                                            oninput="this.value = this.value.replace(/^[._]+|[._]+$|[^a-z0-9_.]/g, '')" placeholder="Enter Username baru ">
+                                            oninput="this.value = this.value.replace(/^[._]+|[._]+$|[^a-z0-9_.]/g, '')" placeholder="Enter Username ">
                                     </div>
                                     <div class="mb-3">
                                         <div>
@@ -152,7 +142,7 @@
                                     <script>
                                         document.write(new Date().getFullYear())
                                     </script> Neoducation . Crafted with <i
-                                        class="mdi mdi-heart text-red-400"></i> by Dipta
+                                        class="mdi mdi-heart text-red-400"></i> by Dev
                                 </p>
                             </div>
                         </div>
@@ -292,7 +282,7 @@
                                 timer: 2000
                             });
                             setTimeout(function() {
-                                window.location.href = "https://temubakat.com/id/";
+                                window.location.href = "{{route('login.index')}}";
                             }, 2000);
                         },
                         error: function(error) {

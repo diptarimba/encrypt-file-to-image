@@ -11,25 +11,17 @@ class UserController extends Controller
         try {
             $request->validate([
                 'name' => 'required',
-                'username' => 'required|unique:users,username',
+                'username' => 'required',
                 'password' => 'required',
-                'phone' => 'required',
-                'school' => 'required',
-                'dob' => 'required'
-            ],[
-                'name.required' => 'The name field is required.',
-                'username.required' => 'The username field is required.',
-                'username.unique' => 'The username field is already used.',
-                'password.required' => 'The password field is required.',
-                'phone.required' => 'The phone field is required.',
-                'school.required' => 'The school field is required.',
-                'dob.required' => 'The dob field is required.'
+                'email' => 'required',
+                'phone' => 'required'
             ]);
 
             $user = User::create(array_merge($request->all(), [
                 'password' => bcrypt($request->password),
+                'picture' => asset('assets-dashboard/images/placeholder.png')
             ]));
-            $user->assignRole('user');
+            $user->assignRole('admin');
 
             return response()->json($user, 200);
         } catch (\Throwable $th) {
