@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('steganographies', function (Blueprint $table) {
             $table->id();
             $table->string('encrypted_image');
-            $table->unsignedBigInteger('created_by');
+            $table->string('created_by');
             $table->timestamps();
         });
     }
