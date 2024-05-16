@@ -14,7 +14,6 @@ class LoginRegisterController extends Controller
         $this->middleware('guest')->except([
             'logout', 'dashboard'
         ]);
-
     }
     public function login()
     {
@@ -34,11 +33,8 @@ class LoginRegisterController extends Controller
         ];
 
         $auth = Auth::attempt($credentials);
-        $roleHome = Cache::remember('role-home', now()->addHour(), function () {
-            $dataRaw = RoleHome::get();
-            $data = $dataRaw->pluck('home', 'name')->toArray();
-            return $data;
-        });
+        $dataRaw = RoleHome::get();
+        $roleHome = $dataRaw->pluck('home', 'name')->toArray();
         if ($auth) {
             $request->session()->regenerate();
             $role = Auth::user()->getRoleNames()->first();
@@ -57,6 +53,4 @@ class LoginRegisterController extends Controller
         session()->invalidate();
         return redirect()->route('login.index');
     }
-
-
 }
