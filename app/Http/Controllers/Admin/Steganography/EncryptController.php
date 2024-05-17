@@ -48,14 +48,20 @@ class EncryptController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'image' => 'required|mimes:png',
-            'file' => 'required|mimes:png,jpg,pdf',
+            'image' => 'required|mimes:png|max:2048',
+            'file' => 'required|mimes:jpg,png,jpeg,pdf,docx,txt,csv,xlsx,csv|max:2048',
             'password' => 'required'
+        ], [
+            'image.required' => 'Image is required',
+            'image.mimes' => 'Only png files are allowed',
+            'image.max' => 'Image size must be less than 2MB',
+            'file.required' => 'File is required',
+            'file.mimes' => 'Only jpg, png, jpeg, pdf, docx, txt, csv, xlsx, csv files are allowed',
+            'file.max' => 'File size must be less than 2MB',
         ]);
 
         $imagePath = $request->file('image')->getPathname();
         $file = $request->file('file');
-
         $fileExtension = $file->getClientOriginalExtension();
 
         // Membaca konten file dan mengubahnya menjadi data string base64
@@ -68,31 +74,68 @@ class EncryptController extends Controller
                 $extensionString = 'png';
                 break;
             case 'jpg':
+            case 'jpeg':
                 $extensionString = 'jpg';
                 break;
             case 'pdf':
                 $extensionString = 'pdf';
                 break;
+            case 'txt':
+                $extensionString = 'txt';
+                break;
             default:
-                $extensionString = 'unknow';
+                $extensionString = 'unknown';
         }
 
         // Generate hash bcrypt
-        $ecnryptedPassword = Hash::make($request->password);
-        $base64Content = 'password:' . $ecnryptedPassword .'|filetype:' . $extensionString . '|base64:' . base64_encode($fileContent);
+        $encryptedPassword = Hash::make($request->password);
+        $base64Content = 'password:' . $encryptedPassword . '|filetype:' . $extensionString . '|base64:' . $base64Content;
         // Implementasi rot13
         $base64Content = str_rot13($base64Content);
 
-        $imageWithMessage = $this->embedMessage(imagecreatefrompng($imagePath), $base64Content);
+        // Validasi ukuran gambar untuk memastikan bisa menampung pesan
+        $imageSize = getimagesize($imagePath);
+        $width = $imageSize[0];
+        $height = $imageSize[1];
+        $maxMessageSize = ($width * $height * 3) / 8; // Kapasitas dalam byte
+        if (strlen($base64Content) > $maxMessageSize) {
+            return redirect()->back()->withErrors(['file' => 'Ukuran file terlalu besar untuk dienkripsi dalam gambar ini.']);
+        }
+
+        // Membuat resource gambar dari file yang diupload
+        $img = null;
+        switch ($request->file('image')->getClientOriginalExtension()) {
+            case 'jpg':
+            case 'jpeg':
+                $img = imagecreatefromjpeg($imagePath);
+                break;
+            case 'png':
+                $img = imagecreatefrompng($imagePath);
+                break;
+            default:
+                return redirect()->back()->withErrors(['image' => 'Unsupported image format.']);
+        }
+
+        $imageWithMessage = $this->embedMessage($img, $base64Content);
 
         $nameFile = UuidV4::uuid4()->toString();
-        $namePath = 'stegano_images/' . $nameFile . '.png';
+        $namePath = 'stegano_images/' . $nameFile . '.' . $request->file('image')->getClientOriginalExtension();
         $outputPath = storage_path('app/public/' . $namePath);
         $directory = dirname($outputPath);
         if (!file_exists($directory)) {
             mkdir($directory, 0777, true);
         }
-        imagepng($imageWithMessage, $outputPath);
+
+        // Menyimpan gambar dengan pesan yang disisipkan
+        switch ($request->file('image')->getClientOriginalExtension()) {
+            case 'jpg':
+            case 'jpeg':
+                imagejpeg($imageWithMessage, $outputPath);
+                break;
+            case 'png':
+                imagepng($imageWithMessage, $outputPath);
+                break;
+        }
 
         $crypto = new Steganography();
         $crypto->encrypted_image = url('storage/' . $namePath);

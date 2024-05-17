@@ -32,9 +32,23 @@ class DecryptController extends Controller
 
         preg_match($pattern, $image, $matches);
         $imagePath = public_path($matches[0]);
-        $image = imagecreatefromstring(file_get_contents($imagePath));
 
-        $message = $this->extractMessage($image);
+        // Membuat resource gambar dari file yang disimpan
+        $img = null;
+        $extension = pathinfo($imagePath, PATHINFO_EXTENSION);
+        switch ($extension) {
+            case 'jpg':
+            case 'jpeg':
+                $img = imagecreatefromjpeg($imagePath);
+                break;
+            case 'png':
+                $img = imagecreatefrompng($imagePath);
+                break;
+            default:
+                return redirect()->back()->withErrors(['image' => 'Unsupported image format.']);
+        }
+
+        $message = $this->extractMessage($img);
         $message = str_rot13($message);
 
         $patternPassword = "/password:([^\|]*)/";
@@ -46,43 +60,45 @@ class DecryptController extends Controller
                 preg_match($patternFileType, $message, $matchesType);
                 preg_match($patternFileData, $message, $matchesData);
                 $name = UuidV4::uuid4();
-                switch ($matchesType[1] && $matchesData[1]) {
+                switch ($matchesType[1]) {
                     case 'pdf':
-                        dd(strlen($matchesData[1]));
-                        $file = base64_decode($matchesData[1]);
-                        return response()->streamDownload(function () use ($file) {
-                            fpassthru($file);
-                        }, $name . '.pdf', ['Content-Type' => 'application/pdf', 'Content-Disposition' => 'attachment; filename="' . $name . '.pdf"']);
                     case 'jpg':
-                        $file = base64_decode($matchesData[1]);
-                        return response()->streamDownload(function () use ($file) {
-                            fpassthru($file);
-                        }, $name . '.jpg', ['Content-Type' => 'image/jpeg']);
+                    case 'jpeg':
                     case 'png':
-                        $file = base64_decode($matchesData[1]);
-                        return response()->streamDownload(function () use ($file) {
-                            fpassthru($file);
-                        }, $name . '.png', ['Content-Type' => 'image/png']);
                     case 'txt':
                         $file = base64_decode($matchesData[1]);
-                        return response()->streamDownload(function () use ($file) {
-                            fpassthru($file);
-                        }, $name . '.txt', ['Content-Type' => 'text/plain']);
+                        $stream = fopen('php://memory', 'rb+');
+                        fwrite($stream, $file);
+                        rewind($stream);
+                        return response()->streamDownload(function () use ($stream) {
+                            fpassthru($stream);
+                            fclose($stream);
+                        }, $name . '.' . $matchesType[1], [
+                            'Content-Type' => $this->getContentType($matchesType[1]),
+                            'Content-Disposition' => 'attachment; filename="' . $name . '.' . $matchesType[1] . '"'
+                        ]);
                     default:
-                        echo "File type not supported";
                         return back()->withInput()->withErrors(['password' => 'File type not supported']);
                 }
-
             } else {
-                echo "Password salah";
                 return back()->withInput()->withErrors(['password' => 'Password salah']);
             }
-            echo "Password found: " . $matches[1];
         } else {
-            echo "No password format found.";
+            return back()->withInput()->withErrors(['password' => 'No password format found.']);
         }
+    }
 
-        dd($message);
+    private function getContentType($fileType)
+    {
+        $mimeTypes = [
+            'pdf' => 'application/pdf',
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'txt' => 'text/plain'
+        ];
+
+        return $mimeTypes[$fileType] ?? 'application/octet-stream';
     }
 
     public function extractMessage($img)
