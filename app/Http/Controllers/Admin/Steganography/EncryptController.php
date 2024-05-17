@@ -71,18 +71,17 @@ class EncryptController extends Controller
 
         $extensionString = '';
         switch ($fileExtension) {
-            case 'png':
-                $extensionString = 'png';
-                break;
             case 'jpg':
             case 'jpeg':
                 $extensionString = 'jpg';
                 break;
-            case 'pdf':
-                $extensionString = 'pdf';
-                break;
+            case 'png':
+            case 'docx':
+            case 'csv':
+            case 'xlsx':
             case 'txt':
-                $extensionString = 'txt';
+            case 'pdf':
+                $extensionString = $fileExtension;
                 break;
             default:
                 $extensionString = 'unknown';
