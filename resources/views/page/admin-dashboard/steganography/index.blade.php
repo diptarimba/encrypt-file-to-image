@@ -13,6 +13,7 @@
                     <th class="p-4 pr-8 border rtl:border-l-0 border-y-2 border-gray-50 dark:border-zinc-600">Id</th>
                     <th class="p-4 pr-8 border border-y-2 border-gray-50 dark:border-zinc-600 border-l-0">Waktu Enkripsi</th>
                     <th class="p-4 pr-8 border border-y-2 border-gray-50 dark:border-zinc-600 border-l-0">Gambar</th>
+                    <th class="p-4 pr-8 border border-y-2 border-gray-50 dark:border-zinc-600 border-l-0">Action</th>
                     </th>
                 </tr>
             </thead>
@@ -26,5 +27,6 @@
 <x-datatables.single url="{{route('admin.encrypt.index')}}">
     <x-datatables.column name="created_at"/>
     <x-datatables.column name="encrypted_image"/>
+    <x-datatables.column name="action"/>
 </x-datatables.single>
 @endsection

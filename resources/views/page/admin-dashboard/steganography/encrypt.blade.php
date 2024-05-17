@@ -14,6 +14,7 @@
                     <button type="button" id="removeButton"
                         class="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded">Remove Image</button>
             </div>
+            <x-form.input name="password" type="password" label="Password Encrypt" placeholder="" value="" />
             <x-button.submit />
             <x-button.cancel url="{{ $data['home'] }}" />
         </x-form.base>

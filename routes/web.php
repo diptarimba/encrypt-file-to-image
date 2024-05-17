@@ -37,7 +37,8 @@ Route::middleware(['no_auth'])->group(function () {
         Route::get('dashboard', [AdminHomeController::class, 'index'])->name('dashboard');
         Route::resource('admin', AdminController::class)->parameter('admin', 'user');
         Route::resource('steganography/encrypt', EncryptController::class);
-        Route::resource('steganography/decrypt', DecryptController::class);
+        Route::get('steganography/{decrypt}/decrypt', [DecryptController::class, 'edit'])->name('decrypt.index');
+        Route::post('steganography/{decrypt}/decrypt', [DecryptController::class, 'decrypt_store'])->name('decrypt.store');
     });
 
     Route::get('logout', [LoginRegisterController::class, 'logout'])->name('logout');

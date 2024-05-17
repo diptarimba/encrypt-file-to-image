@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Steganography;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Ramsey\Uuid\Rfc4122\UuidV4;
 
 class EncryptController extends Controller
@@ -25,7 +26,10 @@ class EncryptController extends Controller
                 ->addColumn('encrypted_image', function ($query) {
                     return '<a class="' . self::CLASS_BUTTON_PRIMARY . '" href="' . $query->encrypted_image . '" target="_blank">View Image</a>';
                 })
-                ->rawColumns(['encrypted_image'])
+                ->addColumn('action', function ($query) {
+                    return '<a class="' . self::CLASS_BUTTON_PRIMARY . '" href="' . route('admin.decrypt.index', $query->id) . '">Decrypt</a>';
+                })
+                ->rawColumns(['encrypted_image', 'action'])
                 ->make(true);
         }
 
@@ -45,7 +49,8 @@ class EncryptController extends Controller
     {
         $request->validate([
             'image' => 'required|mimes:png',
-            'file' => 'required|mimes:png,jpg,pdf'
+            'file' => 'required|mimes:png,jpg,pdf',
+            'password' => 'required'
         ]);
 
         $imagePath = $request->file('image')->getPathname();
@@ -71,8 +76,10 @@ class EncryptController extends Controller
             default:
                 $extensionString = 'unknow';
         }
-        $base64Content = 'filetype:' . $extensionString . '|base64:' . base64_encode($fileContent);
 
+        // Generate hash bcrypt
+        $ecnryptedPassword = Hash::make($request->password);
+        $base64Content = 'password:' . $ecnryptedPassword .'|filetype:' . $extensionString . '|base64:' . base64_encode($fileContent);
         // Implementasi rot13
         $base64Content = str_rot13($base64Content);
 
