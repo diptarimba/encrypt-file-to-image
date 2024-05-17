@@ -27,7 +27,7 @@ class EncryptController extends Controller
                     return '<a class="' . self::CLASS_BUTTON_PRIMARY . '" href="' . $query->encrypted_image . '" target="_blank">View Image</a>';
                 })
                 ->addColumn('action', function ($query) {
-                    return '<a class="' . self::CLASS_BUTTON_PRIMARY . '" href="' . route('admin.decrypt.index', $query->id) . '">Decrypt</a>';
+                    return '<a class="' . self::CLASS_BUTTON_SUCCESS . '" href="' . route('admin.decrypt.index', $query->id) . '">Decrypt</a>';
                 })
                 ->rawColumns(['encrypted_image', 'action'])
                 ->make(true);
