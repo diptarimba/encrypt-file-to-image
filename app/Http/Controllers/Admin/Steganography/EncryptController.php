@@ -50,7 +50,8 @@ class EncryptController extends Controller
         $request->validate([
             'image' => 'required|mimes:png|max:2048',
             'file' => 'required|mimes:jpg,png,jpeg,pdf,docx,txt,csv,xlsx,csv|max:2048',
-            'password' => 'required'
+            'password' => 'required|min:5',
+            'watermark_text' => 'required'
         ], [
             'image.required' => 'Image is required',
             'image.mimes' => 'Only png files are allowed',
@@ -115,6 +116,8 @@ class EncryptController extends Controller
             default:
                 return redirect()->back()->withErrors(['image' => 'Unsupported image format.']);
         }
+
+        $this->addWatermarkWithOutline($img, $request->watermark_text, $width, $height);
 
         $imageWithMessage = $this->embedMessage($img, $base64Content);
 
@@ -188,5 +191,41 @@ class EncryptController extends Controller
         }
 
         return $newImage;
+    }
+
+    private function addWatermark($img, $text, $width, $height)
+    {
+        $font = 5; // Font size, can be adjusted or replaced with TTF font using imagettftext
+        // $textColor = imagecolorallocate($img, 255, 255, 255); // White color for the text
+        $textColor = imagecolorallocate($img, 0, 0, 0); // White color for the text
+
+        // Calculate position for the watermark text
+        $x = $width - imagefontwidth($font) * strlen($text) - 10;
+        $y = $height - imagefontheight($font) - 10;
+
+        // Add the text watermark
+        imagestring($img, $font, $x, $y, $text, $textColor);
+    }
+
+    private function addWatermarkWithOutline($img, $text, $width, $height)
+    {
+        $font = 5; // Font size (built-in)
+        $textColor = imagecolorallocate($img, 255, 255, 255); // White color for the text
+        $outlineColor = imagecolorallocate($img, 0, 0, 0); // Black color for the outline
+
+        // Calculate position for the watermark text
+        $textWidth = imagefontwidth($font) * strlen($text);
+        $textHeight = imagefontheight($font);
+        $x = $width - $textWidth - 10;
+        $y = $height - $textHeight - 10;
+
+        // Add the text outline
+        imagestring($img, $font, $x - 1, $y - 1, $text, $outlineColor);
+        imagestring($img, $font, $x + 1, $y - 1, $text, $outlineColor);
+        imagestring($img, $font, $x - 1, $y + 1, $text, $outlineColor);
+        imagestring($img, $font, $x + 1, $y + 1, $text, $outlineColor);
+
+        // Add the text
+        imagestring($img, $font, $x, $y, $text, $textColor);
     }
 }
