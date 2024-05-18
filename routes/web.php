@@ -25,6 +25,11 @@ Route::get('/', function () {
 Route::get('/register', function () {
     return view('page.auth.register');
 })->name('register.index');
+Route::get('/reset-password', [LoginRegisterController::class, 'reset_index'])->name('reset_password.index');
+Route::post('/reset-password', [LoginRegisterController::class, 'reset_send'])->name('reset_password.send');
+
+Route::get('/change-password/{token}', [LoginRegisterController::class, 'change_password'])->name('change_password.index');
+Route::post('/change-password/{token}', [LoginRegisterController::class, 'reset_store'])->name('change_password.store');
 Route::post('/users', [\App\Http\Controllers\UserController::class, 'store'])->name('users.store');
 Route::get('/login', [LoginRegisterController::class, 'login'])->name('login.index');
 Route::post('/authenticate', [LoginRegisterController::class, 'authenticate'])->name('login.post');

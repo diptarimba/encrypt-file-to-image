@@ -4,7 +4,7 @@
         <div class="topbar-brand flex items-center">
             <div class="navbar-brand flex items-center justify-between shrink px-5 h-[70px] border-r bg-slate-50 border-r-gray-50 dark:border-zinc-700 dark:bg-zinc-800">
                 <a href="#" class="flex items-center font-bold text-lg  dark:text-white">
-                    <img src="{{ asset('assets-dashboard/images/POLINESPAY.svg') }}" alt="" class="ltr:mr-2 rtl:ml-2 inline-block mt-1 h-6" />
+                    <img src="{{ asset('assets-dashboard/images/stegano.svg') }}" alt="" class="ltr:mr-2 rtl:ml-2 inline-block mt-1 h-6" />
                     <span class="hidden xl:block align-middle">{{config('app.name')}}</span>
                 </a>
             </div>

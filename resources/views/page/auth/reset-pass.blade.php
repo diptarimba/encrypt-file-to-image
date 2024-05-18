@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <title>Login - {{ config('app.name') }}</title>
+    <title>Change Password - {{ config('app.name') }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta content="{{ config('app.name') }}" name="description" />
     <meta content="" name="Themesbrand" />
@@ -43,9 +43,7 @@
 
                             <div class="my-auto">
                                 <div class="text-center">
-                                    <h5 class="text-gray-600 dark:text-gray-100">Welcome Back !</h5>
-                                    <p class="text-gray-500 dark:text-gray-100/60 mt-1">Sign in to continue to
-                                        Dashboard.</p>
+                                    <h5 class="text-gray-600 dark:text-gray-100">Reset your password<h5>
                                 </div>
 
                                 @if (session('success'))
@@ -62,24 +60,13 @@
                                     @endforeach
                                 @endif
 
-                                <form class="mt-4 pt-2" action="{{ route('login.post') }}" method="post">
+                                <form class="mt-4 pt-2" action="{{ route('change_password.store', $token) }}" method="post">
                                     @csrf
-                                    <div class="mb-4">
-                                        <label
-                                            class="text-gray-600 dark:text-gray-100 font-medium mb-2 block">Username</label>
-                                        <input name="username" type="text"
-                                            class="w-full rounded placeholder:text-sm py-2 border-gray-100 dark:bg-zinc-700/50 dark:border-zinc-600 dark:text-gray-100 dark:placeholder:text-zinc-100/60"
-                                            id="username" placeholder="Enter username">
-                                    </div>
                                     <div class="mb-3">
                                         <div class="flex">
                                             <div class="flex-grow-1">
                                                 <label
                                                     class="text-gray-600 dark:text-gray-100 font-medium mb-2 block">Password</label>
-                                            </div>
-                                            <div class="ltr:ml-auto rtl:mr-auto">
-                                                <a href="{{route('reset_password.index')}}" class="text-gray-500 dark:text-gray-100">Forgot
-                                                    password?</a>
                                             </div>
                                         </div>
 
@@ -94,24 +81,29 @@
                                                     class="mdi mdi-eye-outline"></i></button>
                                         </div>
                                     </div>
-                                    <div class="row mb-6">
-                                        <div class="col">
-                                            <div>
-                                                <input type="checkbox"
-                                                    class="h-4 w-4 border border-gray-300 rounded bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain ltr:float-left rtl:float-right ltr:mr-2 rtl:ml-2 cursor-pointer focus:ring-offset-0"
-                                                    checked id="exampleCheck1">
+                                    <div class="mb-3">
+                                        <div class="flex">
+                                            <div class="flex-grow-1">
                                                 <label
-                                                    class="align-middle text-gray-600 dark:text-gray-100 font-medium">
-                                                    Remember me
-                                                </label>
+                                                    class="text-gray-600 dark:text-gray-100 font-medium mb-2 block">Password</label>
                                             </div>
                                         </div>
 
+                                        <div class="flex">
+                                            <input name="password_confirmation" type="password"
+                                                class="w-full rounded ltr:rounded-r-none rtl:rounded-l-none placeholder:text-sm py-2 border-gray-100 dark:bg-zinc-700/50 dark:border-zinc-600 dark:text-gray-100 dark:placeholder:text-zinc-100/60"
+                                                placeholder="Enter password" aria-label="Password"
+                                                aria-describedby="password-addon">
+                                            <button
+                                                class="bg-gray-50 px-4 rounded ltr:rounded-l-none rtl:rounded-r-none border border-gray-100 ltr:border-l-0 rtl:border-r-0 dark:bg-zinc-700 dark:border-zinc-600 dark:text-gray-100"
+                                                type="button" id="password-addon"><i
+                                                    class="mdi mdi-eye-outline"></i></button>
+                                        </div>
                                     </div>
                                     <div class="mb-3">
                                         <button
                                             class="btn border-transparent bg-violet-500 w-full py-2.5 text-white w-100 waves-effect waves-light shadow-md shadow-violet-200 dark:shadow-zinc-600"
-                                            type="submit">Log In</button>
+                                            type="submit">Reset Password</button>
                                     </div>
                                 </form>
 
@@ -146,7 +138,7 @@
                                     <script>
                                         document.write(new Date().getFullYear())
                                     </script> {{ config('app.name') }} . Crafted with <i
-                                        class="mdi mdi-heart text-red-400"></i> by Themesbrand
+                                        class="mdi mdi-heart text-red-400"></i> by {{config('app.app_dev')}}
                                 </p>
                             </div>
                         </div>

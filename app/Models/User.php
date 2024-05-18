@@ -55,4 +55,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function password_reset_token()
+    {
+        return $this->hasMany(PasswordResetToken::class);
+    }
 }

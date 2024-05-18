@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\ResetPasswordEmail;
 use App\Models\RoleHome;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Mail;
+use Ramsey\Uuid\Uuid;
 
 class LoginRegisterController extends Controller
 {
@@ -27,12 +31,22 @@ class LoginRegisterController extends Controller
             'password' => 'required'
         ]);
 
-        $credentials = [
-            'username' => $request->username,
-            'password' => $request->password
+        $emailCredentials = [
+            'email' => $request->username,
+            'password' => $request->password,
         ];
 
-        $auth = Auth::attempt($credentials);
+        $usernameCredentials = [
+            'username' => $request->username,
+            'password' => $request->password,
+        ];
+
+        if (filter_var($request->username, FILTER_VALIDATE_EMAIL)) {
+            $auth = Auth::attempt($emailCredentials);
+        } else {
+            $auth = Auth::attempt($usernameCredentials);
+        }
+
         $dataRaw = RoleHome::get();
         $roleHome = $dataRaw->pluck('home', 'name')->toArray();
         if ($auth) {
@@ -52,5 +66,58 @@ class LoginRegisterController extends Controller
         Auth::logout();
         session()->invalidate();
         return redirect()->route('login.index');
+    }
+
+    public function reset_index()
+    {
+        return view('page.auth.email-to-reset-pass');
+    }
+
+    public function change_password($token)
+    {
+        return view('page.auth.reset-pass', compact('token'));
+    }
+
+    public function reset_store($token, Request $request)
+    {
+        $request->validate([
+            'password' => 'required|confirmed',
+        ]);
+
+        $user = User::whereHas('password_reset_token', function($query) use ($token){
+            $query->where('token', $token);
+        })->first();
+
+        if($user){
+            $user->update([
+                'password' => bcrypt($request->password),
+            ]);
+            return redirect()->route('login.index')->with('success', 'Password reset successfully');
+        }
+
+        return redirect()->route('login.index')->with('error', 'Password reset failed');
+    }
+
+    public function reset_send(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|exists:users,email'
+        ]);
+
+        $user = User::with('password_reset_token')->where('email', $request->email)->first();
+        if($user){
+            $token = Uuid::uuid4();
+            $user->password_reset_token()->create([
+                'token' => $token
+            ]);
+
+            $details = [
+                'reset_link' => route('change_password.index', $token)
+            ];
+
+            Mail::to($user->email)->send(new ResetPasswordEmail($details));
+            return redirect()->route('login.index')->with('success', 'Email sent successfully');
+        }
+        return redirect()->route('login.index')->with('error', 'Email not found');
     }
 }
