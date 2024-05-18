@@ -49,7 +49,7 @@ class EncryptController extends Controller
     {
         $request->validate([
             'image' => 'required|mimes:png|max:2048',
-            'file' => 'required|mimes:jpg,png,jpeg,pdf,docx,txt,csv,xlsx,csv|max:2048',
+            'file' => 'required|mimes:jpg,png,jpeg,pdf,docx,txt,csv,xlsx|max:2048',
             'password' => 'required|min:5',
             'watermark_text' => 'required'
         ], [
@@ -57,7 +57,7 @@ class EncryptController extends Controller
             'image.mimes' => 'Only png files are allowed',
             'image.max' => 'Image size must be less than 2MB',
             'file.required' => 'File is required',
-            'file.mimes' => 'Only jpg, png, jpeg, pdf, docx, txt, csv, xlsx, csv files are allowed',
+            'file.mimes' => 'Only jpg, png, jpeg, pdf, docx, txt, csv, xlsx files are allowed',
             'file.max' => 'File size must be less than 2MB',
         ]);
 
