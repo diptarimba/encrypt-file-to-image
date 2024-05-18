@@ -15,6 +15,7 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->uuid('user_id');
             $table->string('token');
+            $table->boolean('used')->default(false);
             $table->timestamps();
         });
     }

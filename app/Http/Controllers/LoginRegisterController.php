@@ -86,11 +86,15 @@ class LoginRegisterController extends Controller
 
         $user = User::whereHas('password_reset_token', function($query) use ($token){
             $query->where('token', $token);
+            $query->where('used', false);
         })->first();
 
         if($user){
             $user->update([
                 'password' => bcrypt($request->password),
+            ]);
+            $user->password_reset_token()->update([
+                'used' => true
             ]);
             return redirect()->route('login.index')->with('success', 'Password reset successfully');
         }
