@@ -21,8 +21,7 @@ class AdminController extends Controller
             })
                 ->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%')
-                        ->orWhere('phone', 'like', '%' . $search . '%')
-                        ->orWhere('school', 'like', '%' . $search . '%');
+                        ->orWhere('phone', 'like', '%' . $search . '%');
                 })
                 ->select();
             return datatables()->of($user)
@@ -98,7 +97,6 @@ class AdminController extends Controller
         $user->update(array_merge($request->all(), [
             'password' => $request->password ? bcrypt($request->password) : $user->password,
             'dob' => $user->dob,
-            'school' => $user->school,
             'picture' => $user->picture
         ]));
 

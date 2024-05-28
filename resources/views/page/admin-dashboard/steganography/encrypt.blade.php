@@ -8,7 +8,7 @@
     <x-util.card title="{{ $data['title'] }}">
         <x-form.base url="{{ $data['url'] }}" method="POST">
             <x-form.input name="file" type="file" label="File to Encrypt" placeholder="" value="" />
-            <x-form.input accept="image/*" texting="Image" name="image" type="file" label="Image to Camuflase (.png)" placeholder="" value="" />
+            <x-form.input accept=".png" texting="Image" name="image" type="file" label="Image to Camuflase (.png)" placeholder="" value="" />
             <div class="mb-4 hidden" id="thumbnailContainer">
                 <img id="thumbnail" src="" alt="Thumbnail" class="max-w-xs mb-2">
                     <button type="button" id="removeButton"
