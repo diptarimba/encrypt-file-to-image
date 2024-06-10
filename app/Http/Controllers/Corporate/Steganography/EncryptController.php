@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Steganography;
+namespace App\Http\Controllers\Corporate\Steganography;
 
 use App\Http\Controllers\Controller;
 use App\Models\Steganography;
@@ -13,8 +13,12 @@ class EncryptController extends Controller
 {
     public function index(Request $request)
     {
+        $corporateId = auth()->user()->corporate_id;
         if ($request->ajax()) {
-            $crypto = Steganography::orderBy('created_at', 'desc')->select();
+
+            $crypto = Steganography::whereHas('user', function($query) use ($corporateId){
+                $query->where('corporate_id', $corporateId);
+            })->orderBy('created_at', 'desc')->select();
             return datatables()->of($crypto)
                 ->addIndexColumn()
                 ->addColumn('created_by', function ($query) {
@@ -27,19 +31,19 @@ class EncryptController extends Controller
                     return '<a class="' . self::CLASS_BUTTON_PRIMARY . '" href="' . $query->encrypted_image . '" target="_blank">View Image</a>';
                 })
                 ->addColumn('action', function ($query) {
-                    return '<a class="' . self::CLASS_BUTTON_SUCCESS . '" href="' . route('admin.decrypt.index', $query->id) . '">Decrypt</a>';
+                    return '<a class="' . self::CLASS_BUTTON_SUCCESS . '" href="' . route('corporate.decrypt.index', $query->id) . '">Decrypt</a>';
                 })
                 ->rawColumns(['encrypted_image', 'action'])
                 ->make(true);
         }
 
-        return view('page.admin-dashboard.steganography.index');
+        return view('page.corporate-dashboard.steganography.index');
     }
 
     public function create()
     {
-        $data = $this->createMetaPageData(null, 'Encrypt', 'encrypt');
-        return view('page.admin-dashboard.steganography.encrypt', compact('data'));
+        $data = $this->createMetaPageData(null, 'Encrypt', 'encrypt', 'corporate');
+        return view('page.corporate-dashboard.steganography.encrypt', compact('data'));
     }
 
     /**
@@ -146,7 +150,7 @@ class EncryptController extends Controller
 
         imagedestroy($imageWithMessage);
 
-        return redirect()->route('admin.encrypt.index')->with('success', 'Steganography created successfully');
+        return redirect()->route('corporate.encrypt.index')->with('success', 'Steganography created successfully');
     }
 
     public function embedMessage($img, $message)

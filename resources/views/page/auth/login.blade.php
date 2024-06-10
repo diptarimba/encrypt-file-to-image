@@ -6,7 +6,7 @@
     <title>Login - {{ config('app.name') }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta content="{{ config('app.name') }}" name="description" />
-    <meta content="" name="Themesbrand" />
+    <meta content="" name="Developer" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- App favicon -->
@@ -84,14 +84,15 @@
                                         </div>
 
                                         <div class="flex">
-                                            <input name="password" type="password"
+                                            <input name="password" id="password" type="password"
                                                 class="w-full rounded ltr:rounded-r-none rtl:rounded-l-none placeholder:text-sm py-2 border-gray-100 dark:bg-zinc-700/50 dark:border-zinc-600 dark:text-gray-100 dark:placeholder:text-zinc-100/60"
                                                 placeholder="Enter password" aria-label="Password"
                                                 aria-describedby="password-addon">
                                             <button
                                                 class="bg-gray-50 px-4 rounded ltr:rounded-l-none rtl:rounded-r-none border border-gray-100 ltr:border-l-0 rtl:border-r-0 dark:bg-zinc-700 dark:border-zinc-600 dark:text-gray-100"
                                                 type="button" id="password-addon"><i
-                                                    class="mdi mdi-eye-outline"></i></button>
+                                                    class="mdi mdi-eye-outline" onclick="togglePasswordVisibility()"></i></button>
+
                                         </div>
                                     </div>
                                     <div class="row mb-6">
@@ -134,9 +135,9 @@
                                 </div> --}}
 
                                 <div class="mt-12 text-center">
-                                    <p class="text-gray-500 dark:text-gray-100">Don't have an account ? <a
+                                    {{-- <p class="text-gray-500 dark:text-gray-100">Don't have an account ? <a
                                             href="{{ route('register.index') }}" class="text-violet-500 font-semibold">
-                                            Signup now </a> </p>
+                                            Signup now </a> </p> --}}
                                 </div>
                             </div>
 
@@ -146,14 +147,15 @@
                                     <script>
                                         document.write(new Date().getFullYear())
                                     </script> {{ config('app.name') }} . Crafted with <i
-                                        class="mdi mdi-heart text-red-400"></i> by Themesbrand
+                                        class="mdi mdi-heart text-red-400"></i> by Developer
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-span-12 md:col-span-7 lg:col-span-8 xl:col-span-9">
-                    <div class="h-screen bg-cover relative p-5 bg-[url('../images/auth-bg.jpg')]">
+                    <div class="h-screen bg-cover relative p-5"
+                        style="background-image: url('{{asset('assets-dashboard/images/auth-bg-baru.jpg')}}')">
                         <div class="absolute inset-0 bg-violet-500/90"></div>
 
                         <ul class="bg-bubbles absolute top-0 left-0 w-full h-full overflow-hidden animate-square">
@@ -175,48 +177,46 @@
                                     <div class="swiper-wrapper">
                                         <div class="swiper-slide">
                                             <i class="bx bxs-quote-alt-left text-green-600 text-5xl"></i>
-                                            <h3 class="mt-4 text-white text-22">“I feel confident imposing change on
-                                                myself. It's a lot more progressing fun than looking back. That's why I
-                                                ultricies enim at malesuada nibh diam on tortor neaded to throw curve
-                                                balls.”</h3>
+                                            <h3 class="mt-4 text-white text-22">“We discovered in our research that
+                                                insider threats are not viewed as seriously as external threats, like
+                                                a cyberattack. But when companies had an insider threat, in general,
+                                                they were much more costly than external incidents.”</h3>
                                             <div class="flex mt-6 mb-10 pt-4">
-                                                <img src="{{ asset('assets-dashboard/images/users/avatar-1.jpg') }}"
+                                                <img src="{{ asset('assets-dashboard/images/person/larrry.jpeg') }}"
                                                     class="h-12 w-12 rounded-full" alt="...">
                                                 <div class="flex-1 ltr:ml-3 rtl:mr-2 mb-4">
-                                                    <h5 class="font-size-18 text-white">Ilse R. Eaton</h5>
-                                                    <p class="mb-0 text-white/50">Manager
+                                                    <h5 class="font-size-18 text-white">Dr. Larry Ponemon</h5>
+                                                    <p class="mb-0 text-white/50">founder of the Ponemon Institute
                                                     </p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="swiper-slide">
                                             <i class="bx bxs-quote-alt-left text-green-600 text-5xl"></i>
-                                            <h3 class="mt-4 text-white text-22">“I feel confident imposing change on
-                                                myself. It's a lot more progressing fun than looking back. That's why I
-                                                ultricies enim at malesuada nibh diam on tortor neaded to throw curve
-                                                balls.”</h3>
+                                            <h3 class="mt-4 text-white text-22">“Steganography, which is the art and
+                                                science of encoding hidden messages in such a way that no one, apart
+                                                from the sender and intended recipient, even suspects the existence
+                                                of the message.”</h3>
                                             <div class="flex mt-6 mb-10 pt-4">
                                                 <img src="{{ asset('assets-dashboard/images/users/avatar-2.jpg') }}"
                                                     class="h-12 w-12 rounded-full" alt="...">
                                                 <div class="flex-1 ltr:ml-3 rtl:mr-2 mb-4">
-                                                    <h5 class="font-size-18 text-white">Mariya Willam</h5>
-                                                    <p class="mb-0 text-white/50">Designer
+                                                    <h5 class="font-size-18 text-white">Timothy James Lambert</h5>
+                                                    <p class="mb-0 text-white/50">The Gnostic Notebook
                                                     </p>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="swiper-slide">
                                             <i class="bx bxs-quote-alt-left text-green-600 text-5xl"></i>
-                                            <h3 class="mt-4 text-white text-22">“I feel confident imposing change on
-                                                myself. It's a lot more progressing fun than looking back. That's why I
-                                                ultricies enim at malesuada nibh diam on tortor neaded to throw curve
-                                                balls.”</h3>
+                                            <h3 class="mt-4 text-white text-22">“The weakest link in the security chain
+                                                is the human element.”</h3>
                                             <div class="flex mt-6 mb-10 pt-4">
-                                                <img src="{{ asset('assets-dashboard/images/users/avatar-3.jpg') }}"
+                                                <img src="{{ asset('assets-dashboard/images/person/kevin.jpeg') }}"
                                                     class="h-12 w-12 rounded-full" alt="...">
                                                 <div class="flex-1 ltr:ml-3 rtl:mr-2 mb-4">
-                                                    <h5 class="font-size-18 text-white">Jiya Jons</h5>
-                                                    <p class="mb-0 text-white/50">Developer
+                                                    <h5 class="font-size-18 text-white">Kevin Mitnick</h5>
+                                                    <p class="mb-0 text-white/50">founder of Mitnick Security Consulting
                                                     </p>
                                                 </div>
                                             </div>
@@ -255,6 +255,19 @@
     <script src="{{ asset('assets-dashboard/js/pages/login.init.js') }}"></script>
 
     <script src="{{ asset('assets-dashboard/js/app.js') }}"></script>
+
+    <script>
+        function togglePasswordVisibility() {
+            const passwordInput = document.getElementById('password');
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                document.getElementById('password-addon').innerHTML = '<i class="mdi mdi-eye-off-outline" onclick="togglePasswordVisibility()"></i>';
+            } else {
+                passwordInput.type = 'password';
+                document.getElementById('password-addon').innerHTML = '<i class="mdi mdi-eye-outline" onclick="togglePasswordVisibility()"></i>';
+            }
+        }
+    </script>
 </body>
 
 </html>

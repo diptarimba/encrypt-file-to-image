@@ -6,7 +6,7 @@
     <title>Send Email Reset Password - {{ config('app.name') }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta content="{{ config('app.name') }}" name="description" />
-    <meta content="" name="Themesbrand" />
+    <meta content="" name="Developer" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- App favicon -->

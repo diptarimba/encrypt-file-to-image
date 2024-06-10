@@ -23,6 +23,8 @@ return new class extends Migration
             $table->timestamps();
             $table->string('picture')->nullable();
             $table->timestamp('deleted_at')->nullable();
+            $table->uuid('corporate_id')->nullable();
+            $table->boolean('corporate_admin')->default(false);
         });
     }
 

@@ -1,24 +1,22 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\Corporate;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request)
     {
+
         if ($request->ajax()) {
             $search = $request->search['value'];
             $user = User::whereHas('roles', function ($query) {
-                $query->where('name', 'admin');
+                $query->where('name', 'user_corporate');
             })
+                ->where('corporate_id', auth()->user()->corporate_id)
                 ->where(function ($query) use ($search) {
                     $query->where('name', 'like', '%' . $search . '%')
                         ->orWhere('phone', 'like', '%' . $search . '%');
@@ -27,12 +25,12 @@ class AdminController extends Controller
             return datatables()->of($user)
                 ->addIndexColumn()
                 ->addColumn('action', function ($query) {
-                    return $this->getActionColumn($query, 'admin');
+                    return $this->getActionColumn($query, 'admin', 'corporate');
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('page.admin-dashboard.admin.index');
+        return view('page.corporate-dashboard.admin.index');
     }
 
     /**
@@ -40,8 +38,8 @@ class AdminController extends Controller
      */
     public function create()
     {
-        $data = $this->createMetaPageData(null, 'Admin', 'admin');
-        return view('page.admin-dashboard.admin.create-edit', compact('data'));
+        $data = $this->createMetaPageData(null, 'Admin', 'admin', 'corporate');
+        return view('page.corporate-dashboard.admin.create-edit', compact('data'));
     }
 
     /**
@@ -59,10 +57,11 @@ class AdminController extends Controller
 
         $user = User::create(array_merge($request->all(), [
             'password' => bcrypt($request->password),
+            'corporate_id' => auth()->user()->corporate_id,
             'picture' => asset('assets-dashboard/images/placeholder.png')
         ]));
-        $user->assignRole('admin');
-        return redirect()->route('admin.admin.index')->with('success', 'Admin created successfully');
+        $user->assignRole('user_corporate');
+        return redirect()->route('corporate.admin.index')->with('success', 'Admin created successfully');
     }
 
     /**
@@ -78,8 +77,8 @@ class AdminController extends Controller
      */
     public function edit(User $user)
     {
-        $data = $this->createMetaPageData($user->id, 'Admin', 'admin');
-        return view('page.admin-dashboard.admin.create-edit', compact('data', 'user'));
+        $data = $this->createMetaPageData($user->id, 'Admin', 'admin', 'corporate');
+        return view('page.corporate-dashboard.admin.create-edit', compact('data', 'user'));
     }
 
     /**
@@ -96,10 +95,11 @@ class AdminController extends Controller
 
         $user->update(array_merge($request->all(), [
             'password' => $request->password ? bcrypt($request->password) : $user->password,
+            'corporate_id' => auth()->user()->corporate_id,
             'picture' => $user->picture
         ]));
 
-        return redirect()->route('admin.admin.index')->with('success', 'Admin updated successfully');
+        return redirect()->route('corporate.admin.index')->with('success', 'Admin updated successfully');
     }
 
     /**
@@ -111,10 +111,13 @@ class AdminController extends Controller
             if($user->id == auth()->user()->id) {
                 throw new \Exception('You cannot delete yourself');
             }
+            if(($user->corporate_id != auth()->user()->corporate_id) || ($user->corporate_id == null) || ($user->corporate_admin == 1)) {
+                throw new \Exception('You cannot delete this admin');
+            }
             $user->delete();
-            return redirect()->route('admin.admin.index')->with('success', 'Admin Deleted Successfully');
+            return redirect()->route('corporate.admin.index')->with('success', 'Admin Deleted Successfully');
         } catch (\Throwable $th) {
-            return redirect()->route('admin.admin.index')->with('error', $th->getMessage());
+            return redirect()->route('corporate.admin.index')->with('error', $th->getMessage());
         }
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin\Steganography;
+namespace App\Http\Controllers\Corporate\Steganography;
 
 use App\Http\Controllers\Controller;
 use App\Models\Steganography;
@@ -11,12 +11,16 @@ class DecryptController extends Controller
 {
     public function edit(Steganography $decrypt)
     {
+        $decrypt->load('user');
+        if ($decrypt->user->corporate_id != auth()->user()->corporate_id) {
+            return redirect()->route('corporate.encrypt.index')->with('error', 'Decrypt not found');
+        }
         $data = [
             'title' => 'Decrypt Image',
-            'url' => route('admin.decrypt.store', $decrypt->id),
-            'home' => route('admin.encrypt.index')
+            'url' => route('corporate.decrypt.store', $decrypt->id),
+            'home' => route('corporate.encrypt.index')
         ];
-        return view('page.admin-dashboard.steganography.decrypt', compact('data'));
+        return view('page.corporate-dashboard.steganography.decrypt', compact('data'));
     }
 
     public function decrypt_store(Steganography $decrypt, Request $request)

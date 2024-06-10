@@ -14,11 +14,8 @@ class ProfileController extends Controller
     {
         $user = Auth::user();
         $role = $user->getRoleNames()->first();
-        $roleHome = Cache::remember('role-home', now()->addHours(24), function () {
-            $dataRaw = RoleHome::get();
-            $data = $dataRaw->pluck('home', 'name')->toArray();
-            return $data;
-        });
+        $dataRaw = RoleHome::get();
+        $roleHome = $dataRaw->pluck('home', 'name')->toArray();
         $data = [
             'url' => route('profile.store', $user->id),
             'home' => $roleHome[$role],

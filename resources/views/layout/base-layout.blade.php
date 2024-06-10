@@ -6,7 +6,7 @@
     <title>{{ config('app.name') }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta content="Tailwind Admin & Dashboard Template" name="description" />
-    <meta content="" name="Themesbrand" />
+    <meta content="" name="Developer" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- App favicon -->
@@ -200,7 +200,7 @@
                     </script> {{config('app.name')}}
                 </div>
                 <div class="hidden md:inline-block text-end">Design & Develop by <a href=""
-                        class="text-violet-500 underline">Themesbrand</a></div>
+                        class="text-violet-500 underline">Developer</a></div>
 
             </div>
         </footer>

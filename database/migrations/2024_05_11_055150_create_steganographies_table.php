@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('encrypted_image');
             $table->string('created_by');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
