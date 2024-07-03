@@ -42,8 +42,19 @@ class EncryptController extends Controller
 
     public function create()
     {
+        $imagesPath = url('/assets-dashboard/images/choose-image');
+
+        // Get all image files with .jpg, .jpeg, .png extensions
+        $images = glob(public_path('assets-dashboard/images/choose-image/*_thumbnail.{jpg,jpeg,png,PNG}'), GLOB_BRACE);
+        $images = array_map(function($path) use ($imagesPath){
+            return str_replace(public_path(), '', $path);
+        }, $images);
+        $images = array_map(function($path) use ($imagesPath){
+            return $imagesPath . '/' . substr($path, strlen('assets-dashboard/images/choose-image') + 2);
+        }, $images);
+
         $data = $this->createMetaPageData(null, 'Encrypt', 'encrypt', 'corporate');
-        return view('page.corporate-dashboard.steganography.encrypt', compact('data'));
+        return view('page.corporate-dashboard.steganography.encrypt', compact('data', 'images'));
     }
 
     /**
@@ -52,12 +63,14 @@ class EncryptController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'image' => 'required|mimes:png|max:2048',
-            'file' => 'required|mimes:jpg,png,jpeg,pdf,docx,txt,csv,xlsx|max:2048',
+            'image' => ['required_without:imagedefault', 'mimes:png', 'max:2048'],
+            'imagedefault' => ['required_without:image'],
+            'file' => 'required|mimes:jpg,png,jpeg,pdf,docx,txt,csv,xlsx,zip|max:2048',
             'password' => 'required|min:5',
             'watermark_text' => 'required'
         ], [
             'image.required' => 'Image is required',
+            'imagedefault.required' => 'Selected Image is required',
             'image.mimes' => 'Only png files are allowed',
             'image.max' => 'Image size must be less than 2MB',
             'file.required' => 'File is required',
@@ -65,7 +78,14 @@ class EncryptController extends Controller
             'file.max' => 'File size must be less than 2MB',
         ]);
 
-        $imagePath = $request->file('image')->getPathname();
+        if($request->file('image')) {
+            $imagePath = $request->file('image')->getPathname();
+        }else {
+            $imageRaw = str_replace(url('/'), '', $request->imagedefault);
+            $imageRaw = str_replace('_thumbnail', '', $imageRaw);
+            $imagePath = public_path($imageRaw);
+        }
+
         $file = $request->file('file');
         $fileExtension = $file->getClientOriginalExtension();
 
@@ -85,6 +105,7 @@ class EncryptController extends Controller
             case 'xlsx':
             case 'txt':
             case 'pdf':
+            case 'zip':
                 $extensionString = $fileExtension;
                 break;
             default:
@@ -107,41 +128,21 @@ class EncryptController extends Controller
         }
 
         // Membuat resource gambar dari file yang diupload
-        $img = null;
-        switch ($request->file('image')->getClientOriginalExtension()) {
-            case 'jpg':
-            case 'jpeg':
-                $img = imagecreatefromjpeg($imagePath);
-                break;
-            case 'png':
-                $img = imagecreatefrompng($imagePath);
-                break;
-            default:
-                return redirect()->back()->withErrors(['image' => 'Unsupported image format.']);
-        }
+        $img = imagecreatefrompng($imagePath);
 
         $this->addWatermarkWithOutline($img, $request->watermark_text, $width, $height);
 
         $imageWithMessage = $this->embedMessage($img, $base64Content);
 
         $nameFile = UuidV4::uuid4()->toString();
-        $namePath = 'stegano_images/' . $nameFile . '.' . $request->file('image')->getClientOriginalExtension();
+        $namePath = 'stegano_images/' . $nameFile . '.png';
         $outputPath = storage_path('app/public/' . $namePath);
         $directory = dirname($outputPath);
         if (!file_exists($directory)) {
             mkdir($directory, 0777, true);
         }
 
-        // Menyimpan gambar dengan pesan yang disisipkan
-        switch ($request->file('image')->getClientOriginalExtension()) {
-            case 'jpg':
-            case 'jpeg':
-                imagejpeg($imageWithMessage, $outputPath);
-                break;
-            case 'png':
-                imagepng($imageWithMessage, $outputPath);
-                break;
-        }
+        imagepng($imageWithMessage, $outputPath);
 
         $crypto = new Steganography();
         $crypto->encrypted_image = url('storage/' . $namePath);

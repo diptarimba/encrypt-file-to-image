@@ -70,6 +70,7 @@ class DecryptController extends Controller
                     case 'jpeg':
                     case 'png':
                     case 'txt':
+                    case 'zip':
                         $file = base64_decode($matchesData[1]);
                         $stream = fopen('php://memory', 'rb+');
                         fwrite($stream, $file);
@@ -99,6 +100,7 @@ class DecryptController extends Controller
             'jpg' => 'image/jpeg',
             'jpeg' => 'image/jpeg',
             'png' => 'image/png',
+            'zip' => 'application/x-zip',
             'txt' => 'text/plain'
         ];
 
