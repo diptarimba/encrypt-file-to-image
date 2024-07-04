@@ -9,6 +9,11 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
+    public function welcome()
+    {
+        return view('page.corporate-dashboard.home.welcome');
+    }
+
     public function index()
     {
         $encDoc = Steganography::whereHas('user', function($query){

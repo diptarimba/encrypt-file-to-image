@@ -7,6 +7,9 @@
 
 @section('content')
     <x-util.card title="Admin" add url="{{route('corporate.encrypt.create')}}">
+        <x-slot name="customBtn">
+            <x-button.button url="{{route('corporate.encrypt.upload_get')}}" label="Upload Data" colour="sky"/>
+        </x-slot>
         <table id="datatable" class="table w-full pt-4 text-gray-700 dark:text-zinc-100 datatables-target-exec">
             <thead>
                 <tr>

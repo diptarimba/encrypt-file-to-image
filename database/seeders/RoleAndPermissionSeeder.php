@@ -28,7 +28,7 @@ class RoleAndPermissionSeeder extends Seeder
                 'permission' => [
                     'view dashboard'
                 ],
-                'home' => 'corporate.dashboard'
+                'home' => 'corporate.welcome'
             ]
         ];
 

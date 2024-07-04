@@ -49,10 +49,13 @@ Route::middleware(['no_auth'])->group(function () {
 
 
     Route::prefix('corporate')->as('corporate.')->middleware(['role:user_corporate', 'auth'])->group(function () {
+        Route::get('welcome', [CorporateHomeController::class, 'welcome'])->name('welcome');
         Route::get('dashboard', [CorporateHomeController::class, 'index'])->name('dashboard');
         Route::get('company', [CorporateProfileController::class, 'index'])->name('company.index');
         Route::post('company', [CorporateProfileController::class, 'update'])->name('company.post');
         Route::resource('admin', CorporateAdminController::class)->parameter('admin', 'user');
+        Route::get('steganography/upload', [EncryptController::class, 'create_upload'])->name('encrypt.upload_get');
+        Route::post('steganography/upload', [EncryptController::class, 'store_upload'])->name('encrypt.upload_store');
         Route::resource('steganography/encrypt', EncryptController::class);
         Route::get('steganography/{decrypt}/decrypt', [DecryptController::class, 'edit'])->name('decrypt.index');
         Route::post('steganography/{decrypt}/decrypt', [DecryptController::class, 'decrypt_store'])->name('decrypt.store');

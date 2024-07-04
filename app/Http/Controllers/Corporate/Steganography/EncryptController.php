@@ -73,6 +73,7 @@ class EncryptController extends Controller
             'imagedefault.required' => 'Selected Image is required',
             'image.mimes' => 'Only png files are allowed',
             'image.max' => 'Image size must be less than 2MB',
+            'password.min' => 'Password must be at least 5 characters',
             'file.required' => 'File is required',
             'file.mimes' => 'Only jpg, png, jpeg, pdf, docx, txt, csv, xlsx files are allowed',
             'file.max' => 'File size must be less than 2MB',
@@ -232,4 +233,36 @@ class EncryptController extends Controller
         // Add the text
         imagestring($img, $font, $x, $y, $text, $textColor);
     }
+
+    public function create_upload()
+    {
+        $data = [
+            'url' => route('corporate.encrypt.upload_store'),
+            'title' => 'Upload Encrypted Image for Decrypt',
+            'home' => route('corporate.encrypt.index'),
+
+        ];
+        return view('page.corporate-dashboard.steganography.encrypted-upload', compact('data'));
+    }
+
+    public function store_upload(Request $request)
+    {
+        $request->validate([
+            'encrypted_image' => 'required|image|mimes:png|max:2048',
+        ]);
+
+        if ($request->hasFile('encrypted_image')) {
+            $image = $request->file('encrypted_image');
+            $image->storeAs('stegano_images', $image->hashName(), 'public');
+            $request->merge(['picture' => asset('storage/stegano_images/' . $image->hashName())]);
+        }
+
+        $decrypt = Steganography::create([
+            'created_by' => auth()->user()->id,
+            'encrypted_image' => $request->picture
+        ]);
+        return redirect()->route('corporate.encrypt.index', $decrypt->id)->with('success', 'Encrypted image uploaded successfully');
+    }
 }
+
+

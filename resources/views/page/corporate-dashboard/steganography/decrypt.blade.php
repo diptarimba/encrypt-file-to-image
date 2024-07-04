@@ -1,8 +1,8 @@
 @extends('layout.app')
 
 @section('page-link', $data['home'])
-@section('page-title', 'User')
-@section('sub-page-title', 'Data')
+@section('page-title', 'Decrypt')
+@section('sub-page-title', 'Action')
 
 @section('content')
     <x-util.card title="{{ $data['title'] }}">
