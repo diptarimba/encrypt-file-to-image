@@ -16,7 +16,7 @@ class EncryptController extends Controller
         $corporateId = auth()->user()->corporate_id;
         if ($request->ajax()) {
 
-            $crypto = Steganography::whereHas('user', function($query) use ($corporateId){
+            $crypto = Steganography::whereHas('user', function ($query) use ($corporateId) {
                 $query->where('corporate_id', $corporateId);
             })->orderBy('created_at', 'desc')->select();
             return datatables()->of($crypto)
@@ -46,10 +46,10 @@ class EncryptController extends Controller
 
         // Get all image files with .jpg, .jpeg, .png extensions
         $images = glob(public_path('assets-dashboard/images/choose-image/*_thumbnail.{jpg,jpeg,png,PNG}'), GLOB_BRACE);
-        $images = array_map(function($path) use ($imagesPath){
+        $images = array_map(function ($path) use ($imagesPath) {
             return str_replace(public_path(), '', $path);
         }, $images);
-        $images = array_map(function($path) use ($imagesPath){
+        $images = array_map(function ($path) use ($imagesPath) {
             return $imagesPath . '/' . substr($path, strlen('assets-dashboard/images/choose-image') + 2);
         }, $images);
 
@@ -79,9 +79,9 @@ class EncryptController extends Controller
             'file.max' => 'File size must be less than 2MB',
         ]);
 
-        if($request->file('image')) {
+        if ($request->file('image')) {
             $imagePath = $request->file('image')->getPathname();
-        }else {
+        } else {
             $imageRaw = str_replace(url('/'), '', $request->imagedefault);
             $imageRaw = str_replace('_thumbnail', '', $imageRaw);
             $imagePath = public_path($imageRaw);
@@ -214,25 +214,38 @@ class EncryptController extends Controller
 
     private function addWatermarkWithOutline($img, $text, $width, $height)
     {
-        $font = 5; // Font size (built-in)
-        $textColor = imagecolorallocate($img, 255, 255, 255); // White color for the text
-        $outlineColor = imagecolorallocate($img, 0, 0, 0); // Black color for the outline
 
-        // Calculate position for the watermark text
-        $textWidth = imagefontwidth($font) * strlen($text);
-        $textHeight = imagefontheight($font);
+        $fontPath = public_path('assets-dashboard/fonts/aroma.otf');
+
+        // Hitung ukuran font berdasarkan ukuran gambar
+        $fontSize = min($width, $height) / 2 / strlen($text);
+
+        // Buat font size setidaknya 5 (built-in font size) untuk menghindari masalah dengan imagestring
+        $font = max(5, (int)$fontSize);
+        $bbox = imagettfbbox($font, 0, $fontPath, $text);
+
+        // Hitung ukuran teks
+        $textWidth = $bbox[2] - $bbox[0];
+        $textHeight = $bbox[1] - $bbox[7];
+
+        // Hitung posisi teks (pojok kanan bawah)
         $x = $width - $textWidth - 10;
         $y = $height - $textHeight - 10;
 
-        // Add the text outline
-        imagestring($img, $font, $x - 1, $y - 1, $text, $outlineColor);
-        imagestring($img, $font, $x + 1, $y - 1, $text, $outlineColor);
-        imagestring($img, $font, $x - 1, $y + 1, $text, $outlineColor);
-        imagestring($img, $font, $x + 1, $y + 1, $text, $outlineColor);
+        // Tentukan warna teks dan outline
+        $textColor = imagecolorallocate($img, 255, 255, 255); // Warna putih untuk teks
+        $outlineColor = imagecolorallocate($img, 0, 0, 0); // Warna hitam untuk outline
 
-        // Add the text
-        imagestring($img, $font, $x, $y, $text, $textColor);
+        // Tambahkan outline pada teks
+        imagettftext($img, $font, 0, $x - 1, $y - 1, $outlineColor, $fontPath, $text);
+        imagettftext($img, $font, 0, $x + 1, $y - 1, $outlineColor, $fontPath, $text);
+        imagettftext($img, $font, 0, $x - 1, $y + 1, $outlineColor, $fontPath, $text);
+        imagettftext($img, $font, 0, $x + 1, $y + 1, $outlineColor, $fontPath, $text);
+
+        // Tambahkan teks
+        imagettftext($img, $font, 0, $x, $y, $textColor, $fontPath, $text);
     }
+
 
     public function create_upload()
     {
@@ -264,5 +277,3 @@ class EncryptController extends Controller
         return redirect()->route('corporate.encrypt.index', $decrypt->id)->with('success', 'Encrypted image uploaded successfully');
     }
 }
-
-
