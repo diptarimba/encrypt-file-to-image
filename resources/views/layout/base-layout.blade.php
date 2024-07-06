@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets-dashboard/images/dominos.pngs') }}" />
+    <link rel="shortcut icon" href="{{ asset('assets-dashboard/images/dominos.png') }}" />
 
 
     <link href="{{ asset('assets-dashboard/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css') }}"
@@ -200,7 +200,7 @@
                     </script> {{config('app.name')}}
                 </div>
                 <div class="hidden md:inline-block text-end">Design & Develop by <a href=""
-                        class="text-violet-500 underline">Developer</a></div>
+                        class="text-violet-500 underline">DOMINOS</a></div>
 
             </div>
         </footer>
