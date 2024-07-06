@@ -147,7 +147,7 @@
                                     <script>
                                         document.write(new Date().getFullYear())
                                     </script> {{ config('app.name') }} . Crafted with <i
-                                        class="mdi mdi-heart text-red-400"></i> by Developer
+                                        class="mdi mdi-heart text-red-400"></i> by DOMINOS
                                 </p>
                             </div>
                         </div>
