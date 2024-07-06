@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets-dashboard/images/stegano.svg') }}" />
+    <link rel="shortcut icon" href="{{ asset('assets-dashboard/images/dominos.png') }}" />
 
 
     <link rel="stylesheet" href="{{ asset('assets-dashboard/libs/swiper/swiper-bundle.min.css') }}">
@@ -34,8 +34,8 @@
                     <div class="w-full bg-white xl:p-12 p-10 dark:bg-zinc-800">
                         <div class="flex h-[90vh] flex-col">
                             <div class="mx-auto">
-                                <a href="index.html" class="">
-                                    <img src="{{ asset('assets-dashboard/images/stegano.svg') }}" alt=""
+                                <a href="/" class="">
+                                    <img src="{{ asset('assets-dashboard/images/dominos.png') }}" alt=""
                                         class="h-8 inline"> <span
                                         class="text-xl align-middle font-medium ltr:ml-2 rtl:mr-2 dark:text-white">{{ config('app.name') }}</span>
                                 </a>

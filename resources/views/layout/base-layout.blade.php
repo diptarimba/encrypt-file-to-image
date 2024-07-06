@@ -10,7 +10,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 
     <!-- App favicon -->
-    <link rel="shortcut icon" href="{{ asset('assets-dashboard/images/stegano.svg') }}" />
+    <link rel="shortcut icon" href="{{ asset('assets-dashboard/images/dominos.pngs') }}" />
 
 
     <link href="{{ asset('assets-dashboard/libs/admin-resources/jquery.vectormap/jquery-jvectormap-1.2.2.css') }}"
