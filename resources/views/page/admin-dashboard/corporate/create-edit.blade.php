@@ -18,11 +18,11 @@
             <x-form.input name="city" label="City" placeholder="input corporate city"
                 value="{{ $corporate->city ?? '' }}" />
             <x-form.input name="state" label="Province" placeholder="input corporate province"
-                value="{{ $corporate->province ?? '' }}" />
+                value="{{ $corporate->state ?? '' }}" />
             <x-form.input name="country" label="Country" placeholder="input corporate country"
                 value="{{ $corporate->country ?? '' }}" />
             <x-form.input oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 5);" name="zip" label="Postal Code" placeholder="input corporate postal code"
-                value="{{ $corporate->postal_code ?? '' }}" />
+                value="{{ $corporate->zip ?? '' }}" />
             <x-form.input accept=".png,.jpg,.jpeg" texting="Image" name="image" type="file" label="Photo Profile"
                 placeholder="" value="" />
             <div class="mb-4 hidden" id="thumbnailContainer">

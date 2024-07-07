@@ -38,19 +38,7 @@ class DecryptController extends Controller
         $imagePath = public_path($matches[0]);
 
         // Membuat resource gambar dari file yang disimpan
-        $img = null;
-        $extension = pathinfo($imagePath, PATHINFO_EXTENSION);
-        switch ($extension) {
-            case 'jpg':
-            case 'jpeg':
-                $img = imagecreatefromjpeg($imagePath);
-                break;
-            case 'png':
-                $img = imagecreatefrompng($imagePath);
-                break;
-            default:
-                return redirect()->back()->withErrors(['image' => 'Unsupported image format.']);
-        }
+        $img = imagecreatefrompng($imagePath);
 
         $message = $this->extractMessage($img);
         $message = str_rot13($message);
