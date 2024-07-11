@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 
-class AdminController extends Controller
+class UserController extends Controller
 {
     public function index(Request $request)
     {
@@ -14,7 +14,7 @@ class AdminController extends Controller
         if ($request->ajax()) {
             $search = $request->search['value'];
             $user = User::whereHas('roles', function ($query) {
-                $query->where('name', 'admin_corporate');
+                $query->where('name', 'user_corporate');
             })
                 ->where('corporate_id', auth()->user()->corporate_id)
                 ->where(function ($query) use ($search) {
@@ -25,12 +25,12 @@ class AdminController extends Controller
             return datatables()->of($user)
                 ->addIndexColumn()
                 ->addColumn('action', function ($query) {
-                    return $this->getActionColumn($query, 'admin', 'corporate');
+                    return $this->getActionColumn($query, 'user', 'corporate');
                 })
                 ->rawColumns(['action'])
                 ->make(true);
         }
-        return view('page.corporate-dashboard.admin.index');
+        return view('page.corporate-dashboard.user.index');
     }
 
     /**
@@ -38,8 +38,8 @@ class AdminController extends Controller
      */
     public function create()
     {
-        $data = $this->createMetaPageData(null, 'Admin', 'admin', 'corporate');
-        return view('page.corporate-dashboard.admin.create-edit', compact('data'));
+        $data = $this->createMetaPageData(null, 'User', 'user', 'corporate');
+        return view('page.corporate-dashboard.user.create-edit', compact('data'));
     }
 
     /**
@@ -60,8 +60,8 @@ class AdminController extends Controller
             'corporate_id' => auth()->user()->corporate_id,
             'picture' => asset('assets-dashboard/images/placeholder.png')
         ]));
-        $user->assignRole('admin_corporate');
-        return redirect()->route('corporate.admin.index')->with('success', 'Admin created successfully');
+        $user->assignRole('user_corporate');
+        return redirect()->route('corporate.user.index')->with('success', 'User created successfully');
     }
 
     /**
@@ -77,8 +77,8 @@ class AdminController extends Controller
      */
     public function edit(User $user)
     {
-        $data = $this->createMetaPageData($user->id, 'Admin', 'admin', 'corporate');
-        return view('page.corporate-dashboard.admin.create-edit', compact('data', 'user'));
+        $data = $this->createMetaPageData($user->id, 'User', 'user', 'corporate');
+        return view('page.corporate-dashboard.user.create-edit', compact('data', 'user'));
     }
 
     /**
@@ -99,7 +99,7 @@ class AdminController extends Controller
             'picture' => $user->picture
         ]));
 
-        return redirect()->route('corporate.admin.index')->with('success', 'Admin updated successfully');
+        return redirect()->route('corporate.user.index')->with('success', 'User updated successfully');
     }
 
     /**
@@ -112,12 +112,12 @@ class AdminController extends Controller
                 throw new \Exception('You cannot delete yourself');
             }
             if(($user->corporate_id != auth()->user()->corporate_id) || ($user->corporate_id == null) || ($user->corporate_admin == 1)) {
-                throw new \Exception('You cannot delete this admin');
+                throw new \Exception('You cannot delete this user');
             }
             $user->delete();
-            return redirect()->route('corporate.admin.index')->with('success', 'Admin Deleted Successfully');
+            return redirect()->route('corporate.user.index')->with('success', 'Admin Deleted Successfully');
         } catch (\Throwable $th) {
-            return redirect()->route('corporate.admin.index')->with('error', $th->getMessage());
+            return redirect()->route('corporate.user.index')->with('error', $th->getMessage());
         }
     }
 }

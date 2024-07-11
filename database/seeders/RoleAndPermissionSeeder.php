@@ -24,6 +24,12 @@ class RoleAndPermissionSeeder extends Seeder
                 ],
                 'home' => 'admin.dashboard'
             ],
+            'admin_corporate' => [
+                'permission' => [
+                    'view dashboard'
+                ],
+                'home' => 'corporate.dashboard'
+            ],
             'user_corporate' => [
                 'permission' => [
                     'view dashboard'

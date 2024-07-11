@@ -220,14 +220,14 @@
                                     <i class="mdi mdi-face-man text-16 align-middle mr-1"></i> Profile
                                 </a>
                             </div>
-                            <hr class="border-gray-50 dark:border-gray-700">
-                            @if (Auth::user()->hasRole('user_corporate'))
+                            {{-- <hr class="border-gray-50 dark:border-gray-700"> --}}
+                            {{-- @if (Auth::user()->hasRole('admin_corporate'))
                             <div class="dropdown-item dark:text-gray-100">
-                                <a class="px-3 py-2 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50" href="{{route('corporate.company.index')}}">
+                                <a class="px-3 py-2 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50" href="{{route('profile.company')}}">
                                     <i class="mdi mdi-account-details text-16 align-middle mr-1"></i> Company Profile
                                 </a>
                             </div>
-                            @endif
+                            @endif --}}
                             <hr class="border-gray-50 dark:border-gray-700">
                             <div class="dropdown-item dark:text-gray-100">
                                 <a class="p-3 hover:bg-gray-50/50 block dark:hover:bg-zinc-700/50" href="{{route('logout')}}">

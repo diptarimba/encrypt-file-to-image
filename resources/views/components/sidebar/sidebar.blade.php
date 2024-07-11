@@ -14,12 +14,17 @@
                     url="{{ route('admin.corporate.index') }}" />
                 <x-sidebar.first-single title="Admin" key="admin" icon="key"
                     url="{{ route('admin.admin.index') }}" />
-                @elseif (auth()->user()->getRoleNames()->first() == 'user_corporate')
+                @elseif (auth()->user()->getRoleNames()->first() == 'admin_corporate')
                 <x-sidebar.first-single title="Dashboard" key="dashboard" icon="home"
                     url="{{ route('corporate.dashboard') }}" />
                 <x-sidebar.first-single title="Admin" key="admin" icon="key"
                     url="{{ route('corporate.admin.index') }}" />
-                <x-sidebar.first-single title="Encrypt" key="admin" icon="command"
+                <x-sidebar.first-single title="User" key="admin" icon="command"
+                url="{{ route('corporate.user.index') }}" />
+                @elseif (auth()->user()->getRoleNames()->first() == 'user_corporate')
+                <x-sidebar.first-single title="Dashboard" key="dashboard" icon="home"
+                    url="{{ route('corporate.welcome') }}" />
+                <x-sidebar.first-single title="Encrypt" key="corporate" icon="command"
                 url="{{ route('corporate.encrypt.index') }}" />
                 @endif
             </ul>

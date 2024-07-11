@@ -86,7 +86,7 @@ class CorporateController extends Controller
             'corporate_admin' => true
         ]);
 
-        $admin_corporate->assignRole('user_corporate');
+        $admin_corporate->assignRole('admin_corporate');
 
         return redirect()->route('admin.corporate.index')
         ->with('success', 'Corporate created successfully')

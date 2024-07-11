@@ -1,7 +1,7 @@
 @extends('layout.app')
 
 @section('page-link', $data['home'])
-@section('page-title', 'Admin')
+@section('page-title', 'User')
 @section('sub-page-title', 'Data')
 
 @section('content')

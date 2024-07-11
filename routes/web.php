@@ -8,8 +8,10 @@ use App\Http\Controllers\Corporate\HomeController as CorporateHomeController;
 use App\Http\Controllers\Corporate\ProfileController as CorporateProfileController;
 use App\Http\Controllers\Corporate\Steganography\DecryptController;
 use App\Http\Controllers\Corporate\Steganography\EncryptController;
+use App\Http\Controllers\Corporate\UserController;
 use App\Http\Controllers\LoginRegisterController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('/', function () {
     return redirect()->route('login.index');
 })->middleware('guest');
@@ -48,17 +51,22 @@ Route::middleware(['no_auth'])->group(function () {
     });
 
 
-    Route::prefix('corporate')->as('corporate.')->middleware(['role:user_corporate', 'auth'])->group(function () {
-        Route::get('welcome', [CorporateHomeController::class, 'welcome'])->name('welcome');
-        Route::get('dashboard', [CorporateHomeController::class, 'index'])->name('dashboard');
-        Route::get('company', [CorporateProfileController::class, 'index'])->name('company.index');
-        Route::post('company', [CorporateProfileController::class, 'update'])->name('company.post');
-        Route::resource('admin', CorporateAdminController::class)->parameter('admin', 'user');
-        Route::get('steganography/upload', [EncryptController::class, 'create_upload'])->name('encrypt.upload_get');
-        Route::post('steganography/upload', [EncryptController::class, 'store_upload'])->name('encrypt.upload_store');
-        Route::resource('steganography/encrypt', EncryptController::class);
-        Route::get('steganography/{decrypt}/decrypt', [DecryptController::class, 'edit'])->name('decrypt.index');
-        Route::post('steganography/{decrypt}/decrypt', [DecryptController::class, 'decrypt_store'])->name('decrypt.store');
+    Route::prefix('corporate')->as('corporate.')->group(function () {
+
+        Route::middleware(['role:user_corporate', 'auth'])->group(function () {
+            Route::get('welcome', [CorporateHomeController::class, 'welcome'])->name('welcome');
+            Route::get('steganography/upload', [EncryptController::class, 'create_upload'])->name('encrypt.upload_get');
+            Route::post('steganography/upload', [EncryptController::class, 'store_upload'])->name('encrypt.upload_store');
+            Route::resource('steganography/encrypt', EncryptController::class);
+            Route::get('steganography/{decrypt}/decrypt', [DecryptController::class, 'edit'])->name('decrypt.index');
+            Route::post('steganography/{decrypt}/decrypt', [DecryptController::class, 'decrypt_store'])->name('decrypt.store');
+        });
+
+        Route::middleware(['role:admin_corporate', 'auth'])->group(function () {
+            Route::get('dashboard', [CorporateHomeController::class, 'index'])->name('dashboard');
+            Route::resource('admin', CorporateAdminController::class);
+            Route::resource('user', UserController::class);
+        });
     });
 
     Route::get('logout', [LoginRegisterController::class, 'logout'])->name('logout');
