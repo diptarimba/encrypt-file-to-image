@@ -7,7 +7,7 @@
                     @if (auth()->user()->getRoleNames()->first() == 'admin')
                     <img src="{{ asset('assets-dashboard/images/dominos.png') }}" alt="" class="ltr:mr-2 rtl:ml-2 inline-block mt-1 h-6" />
                     <span class="hidden xl:block align-middle">{{config('app.name')}}</span>
-                    @elseif(auth()->user()->getRoleNames()->first() == 'user_corporate')
+                    @else
                     <img src="{{ asset(auth()->user()->corporate->image)}}" alt="" class="ltr:mr-2 rtl:ml-2 inline-block mt-1 h-6" />
                     <span class="hidden xl:block align-middle">{{auth()->user()->corporate->name}}</span>
                     @endif
