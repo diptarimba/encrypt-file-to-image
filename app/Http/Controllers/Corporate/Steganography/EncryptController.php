@@ -42,16 +42,35 @@ class EncryptController extends Controller
 
     public function create()
     {
-        $imagesPath = url('/assets-dashboard/images/choose-image');
+        $imagesPath = public_path('assets-dashboard/images/choose-image/');
+        $extensions = ['jpg', 'jpeg', 'png', 'PNG'];
 
-        // Get all image files with .jpg, .jpeg, .png extensions
-        $images = glob(public_path('assets-dashboard/images/choose-image/*_thumbnail.{jpg,jpeg,png,PNG}'), GLOB_BRACE);
-        $images = array_map(function ($path) use ($imagesPath) {
-            return str_replace(public_path(), '', $path);
+
+        /*$images = [];
+        foreach ($extensions as $ext) {
+                $images = array_merge($images, glob($imagesPath . '*.' . $ext));
+        }*/
+
+        $images = [];
+        $directory = new \DirectoryIterator(public_path('assets-dashboard/images/choose-image'));
+
+        foreach ($directory as $fileinfo) {
+            foreach ($directory as $fileinfo) {
+                    if ($fileinfo->isFile()) {
+                        $filename = $fileinfo->getFilename();
+                        $extension = strtolower($fileinfo->getExtension());
+                        if (strpos($filename, '_thumbnail') !== false && in_array($extension, ['jpg', 'jpeg', 'png'])) {
+                            $images[] = $fileinfo->getPathname();
+                        }
+                    }
+                }
+        }
+
+
+        $images = array_map(function ($path) {
+                return asset('assets-dashboard/images/choose-image/' . basename($path));
         }, $images);
-        $images = array_map(function ($path) use ($imagesPath) {
-            return $imagesPath . '/' . substr($path, strlen('assets-dashboard/images/choose-image') + 2);
-        }, $images);
+
 
         $data = $this->createMetaPageData(null, 'Encrypt', 'encrypt', 'corporate');
         return view('page.corporate-dashboard.steganography.encrypt', compact('data', 'images'));

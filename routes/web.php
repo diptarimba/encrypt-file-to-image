@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\CorporateController;
 use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Corporate\AdminController as CorporateAdminController;
 use App\Http\Controllers\Corporate\HomeController as CorporateHomeController;
+use App\Http\Controllers\GuideBookController;
 use App\Http\Controllers\Corporate\ProfileController as CorporateProfileController;
 use App\Http\Controllers\Corporate\Steganography\DecryptController;
 use App\Http\Controllers\Corporate\Steganography\EncryptController;
@@ -58,6 +59,7 @@ Route::middleware(['no_auth'])->group(function () {
             Route::get('steganography/upload', [EncryptController::class, 'create_upload'])->name('encrypt.upload_get');
             Route::post('steganography/upload', [EncryptController::class, 'store_upload'])->name('encrypt.upload_store');
             Route::resource('steganography/encrypt', EncryptController::class);
+            Route::get('/guidebook', [GuideBookController::class, 'index'])->name('guidebook.index');
             Route::get('steganography/{decrypt}/decrypt', [DecryptController::class, 'edit'])->name('decrypt.index');
             Route::post('steganography/{decrypt}/decrypt', [DecryptController::class, 'decrypt_store'])->name('decrypt.store');
         });
@@ -68,6 +70,9 @@ Route::middleware(['no_auth'])->group(function () {
             Route::resource('user', UserController::class);
         });
     });
+
+
+
 
     Route::get('logout', [LoginRegisterController::class, 'logout'])->name('logout');
 });

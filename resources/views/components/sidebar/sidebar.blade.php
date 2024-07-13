@@ -24,6 +24,8 @@
                 @elseif (auth()->user()->getRoleNames()->first() == 'user_corporate')
                 <x-sidebar.first-single title="Dashboard" key="dashboard" icon="home"
                     url="{{ route('corporate.welcome') }}" />
+                <x-sidebar.first-single title="GuideBook" key="guidebook" icon="book"
+                    url="{{ route('corporate.guidebook.index') }}" />
                 <x-sidebar.first-single title="Encrypt" key="corporate" icon="command"
                 url="{{ route('corporate.encrypt.index') }}" />
                 @endif
