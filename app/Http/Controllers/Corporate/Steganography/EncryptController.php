@@ -126,6 +126,7 @@ class EncryptController extends Controller
             case 'txt':
             case 'pdf':
             case 'zip':
+            case 'docx':
                 $extensionString = $fileExtension;
                 break;
             default:

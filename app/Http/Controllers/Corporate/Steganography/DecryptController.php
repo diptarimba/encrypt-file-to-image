@@ -53,6 +53,9 @@ class DecryptController extends Controller
                 preg_match($patternFileData, $message, $matchesData);
                 $name = UuidV4::uuid4();
                 switch ($matchesType[1]) {
+                    case 'xlsx':
+                    case 'csv':
+                    case 'docx':
                     case 'pdf':
                     case 'jpg':
                     case 'jpeg':
@@ -84,12 +87,15 @@ class DecryptController extends Controller
     private function getContentType($fileType)
     {
         $mimeTypes = [
-            'pdf' => 'application/pdf',
             'jpg' => 'image/jpeg',
             'jpeg' => 'image/jpeg',
             'png' => 'image/png',
-            'zip' => 'application/x-zip',
-            'txt' => 'text/plain'
+            'pdf' => 'application/pdf',
+            'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'txt' => 'text/plain',
+            'csv' => 'text/csv',
+            'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'zip' => 'application/x-zip'
         ];
 
         return $mimeTypes[$fileType] ?? 'application/octet-stream';
